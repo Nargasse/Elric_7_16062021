@@ -1,1 +1,46 @@
 /* You can add global styles to this file, and also import other style files */
+:root {
+	--text-main-color: antiquewhite;
+	--text-secondary-color: lavender;
+	--bg-horizon-color: darkslateblue;
+	--bg-far-color: #8f1ce3;
+	--bg-middle-color: #722598;
+	--bg-close-color: indigo;
+	--bg-focus-color: darkmagenta;
+	--outliner-far-color: darkorchid;
+	--outliner-close-color: goldenrod;
+	--decorator-color: pink;
+	--title-secondary-color: #E9B533;
+	--title-tertiary-color: #F5F053;
+}
+
+/*
+palette bleu-ciel :
+--text-main-color: black;
+--text-secondary-color: midnightblue;
+--bg-horizon-color: lemonchiffon;
+--bg-far-color: mediumaquamarine;
+--bg-middle-color: lightskyblue;
+--bg-close-color: lightcyan;
+--bg-focus-color: aquamarine;
+--outliner-far-color: paleturquoise;
+--outliner-close-color: darkturquoise;
+--decorator-color: blue;
+--title-tertiary-color: #287925;
+--title-secondary-color: #625300;
+*/
+
+/*
+palette beige
+--text-secondary-color: darkslategray;
+--bg-horizon-color: lavenderblush;
+--bg-far-color: oldlace;
+--bg-middle-color: beige;
+--bg-close-color: seashell;
+--bg-focus-color: antiquewhite;
+--outliner-far-color: silver;
+--outliner-close-color: slategray;
+--decorator-color: rosybrown;
+--title-tertiary-color: chocolate;
+--title-secondary-color: sienna;
+*/

@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { AuthService } from './service/authentification.service';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +7,16 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'frontGroupomania';
+  constructor(
+    private authService: AuthService,
+    ) { };
+ 
+    isAuth: boolean = false;
+
+    ngOnInit() {
+      this.authService.isAuth.subscribe( isAuth => this.isAuth = isAuth);
+    }
+  onlogOut() {
+    this.authService.logOut();
+  }
 }

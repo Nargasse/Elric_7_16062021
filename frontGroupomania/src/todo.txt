@@ -1,0 +1,2 @@
+ - Rediriger les service de communication de type log vers MediaServeurService
+ - Rajouter la fonction d'authentification par cookie en secure
