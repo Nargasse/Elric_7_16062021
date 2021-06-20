@@ -29,6 +29,18 @@ export class AuthService {
     };
   }
 
+  getToken() {
+    return this.authToken;
+  }
+
+  getNom() {
+    return this.userNom;
+  }
+
+  getUserID() {
+    return this.userID;
+  }
+
   createNewUser(signupForm:object) {
     const newUserUrl = this.apiUrl + '/signup';
     return this.http.post(newUserUrl, signupForm)
@@ -42,11 +54,26 @@ export class AuthService {
         this.userID = response.userID;
         this.userNom = response.nom;
         this.authToken = response.token;
+        if (!document.cookie) {
+          document.cookie = "token=" + response.token + '; expire=' + 3600 + '; SameSite=Lax' +'; httpOnly';
+          document.cookie = "nom=" + response.nom + '; expire=' + 3600 + '; SameSite=Lax' +'; httpOnly';
+          document.cookie = 'id=' + response.userID + '; expire=' + 3600 + '; SameSite=Lax' +'; httpOnly';
+        }
         this.isAuth.next(true);
         this.router.navigate(['/forum']);
       }),
       catchError(this.handleError<User>('loginUser', )),
     )
+  }
+
+  logOut():void {
+    this.authToken = '';
+    this.userNom = '';
+    this.userID = -1;
+    document.cookie = "token=''"+ '; expire=' + -1;
+    document.cookie = "nom=''" + this.getNom() + '; expire=' + -1;
+    document.cookie = 'id=-1' + this.getUserID() + '; expire=' + -1;
+    this.router.navigate(['login']);
   }
 
   accountSuppression() {
@@ -57,22 +84,18 @@ export class AuthService {
     )
   }
 
-  logOut():void {
-    this.authToken = '';
-    this.userNom = '';
-    this.userID = -1;
-    this.router.navigate(['login']);
+  tryAuthByCookie():boolean {
+    let cookies = (document.cookie.split(';'));
+    if (
+      cookies.some((item) => item.trim().startsWith('token')) &&
+      cookies.some((item) => item.trim().startsWith('nom')) &&
+      cookies.some((item) => item.trim().startsWith('id'))
+    ) {
+      this.authToken = String(cookies.find(row => row.startsWith('token='))).split('=')[1];
+      this.userNom = String(cookies.find(row => row.startsWith('nom='))).split('=')[1];
+      this.userID = Number(String(cookies.find(row => row.startsWith('id='))).split('=')[1]);
+      return true
+    } else return false
   }
 
-  getToken() {
-    return this.authToken;
-  }
-
-  getNom() {
-    return this.userNom;
-  }
-
-  getUserID() {
-    return this.userID;
-  }
 }

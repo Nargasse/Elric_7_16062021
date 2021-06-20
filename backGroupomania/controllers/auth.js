@@ -3,6 +3,7 @@ const webToken = require('jsonwebtoken');
 
 const { request, response } = require('express');
 const mysql = require('mysql');
+var cookie = require('cookie');
 
 const sqlDB = mysql.createConnection({
     host: 'localhost',
@@ -36,7 +37,7 @@ exports.createUser = (request, response, next) => {
 }
 
 exports.validateUser = (request, response, next) => {
-    sqlDB.query('SELECT ID, nom, password FROM utilisateurs WHERE mail = ?', [request.body.mail], function (err, result) {
+        sqlDB.query('SELECT ID, nom, password FROM utilisateurs WHERE mail = ?', [request.body.mail], function (err, result) {
         if (err) return response.status(500).json({ msg: 'Erreur de communication avec la BDD' });
         if (typeof result[0] === 'undefined') return response.status(401).json({err});
             bcrypt.compare(request.body.password, result[0].password)
