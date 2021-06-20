@@ -1,13 +1,13 @@
-<h1>Connexion.</h1>
-<button (click)="toSignUp()">Je n'ai pas encore de compte</button>
-<br /> <br />
-<form (ngSubmit)="onLogin(loginForm.form.value)" #loginForm="ngForm">
-    <label for="mail">Adresse mail : </label>
-    <input type="text" id="mail" required name="mail" pattern="[\w.]*@\w*\.\w{2,3}$" ngModel placeholder="m.dupont@mailo.fr">
+<div>
+    <h1>Connexion :</h1>
+    <button (click)="toSignUp()">Je n'ai pas encore de compte</button>
     <br /> <br />
-    <label for="password">Mot de passe : </label>
-    <input type="password" id="password" required name="password" minlength="7" ngModel placeholder="XCj4à$j5ULL">
-    <br />
-    <button type="submit" [disabled]="!loginForm.form.valid">Connexion</button>
-    <br><br>
-</form>
+    <form (ngSubmit)="onLogin(loginForm.form.value)" #loginForm="ngForm">
+        <label for="mail">Adresse mail : </label>
+        <input type="text" id="mail" required name="mail" pattern="[\w.]*@\w*\.\w{2,3}$" ngModel placeholder="m.dupont@mailo.fr">
+        <label for="password">Mot de passe : </label>
+        <input type="password" id="password" required name="password" minlength="7" ngModel placeholder="XCj4à$j5ULL">
+        <button type="submit" [disabled]="!loginForm.form.valid">Connexion</button>
+        <br><br>
+    </form>
+</div>

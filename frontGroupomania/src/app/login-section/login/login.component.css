@@ -1,0 +1,39 @@
+div {
+    margin: 2em auto;
+    width: 20em;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--bg-middle-color);
+    border: 2px outset var(--outliner-far-color);
+}
+
+input {
+    margin: 1.2em 0;
+    background-color: var(--bg-focus-color);
+    color: var(--text-secondary-color);
+}
+
+input:focus {
+    background-color: var(--bg-close-color);
+    color: var(--text-main-color);
+}
+
+h1 {
+    color: var(--title-main-color);
+    font-size: 2.4em;
+}
+
+button {
+	border-radius: 40% 60% / 40% 60%;
+	background-color: var(--bg-close-color);
+	border: 2px groove var(--outliner-close-color);
+	color: var(--text-main-color);
+	padding: 0.2em 0.6em;
+}
+
+button:hover, button:focus {
+	background-color: var(--bg-focus-color);
+	color: var(--text-secondary-color);
+	border: 2px groove var(--decorator-color)
+}

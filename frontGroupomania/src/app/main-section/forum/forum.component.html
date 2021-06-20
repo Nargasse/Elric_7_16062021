@@ -1,11 +1,11 @@
-<article *ngFor='let post of posts; let postIndex=index'>
-    <div>
+<article class='article-main' *ngFor='let post of posts; let postIndex=index'>
+    <div class='title-main'>
         <h2>{{post.titre}}</h2>
         <p>Ecrit par {{post.nom}} le {{post.date}}</p>
     </div>
-    <p>{{post.texte}}</p>
-    <div id='interactionBox{{postIndex}}'>
-        <div class='interaction'>
+    <p class='texte-main'>{{post.texte}}</p>
+    <div id='interactionBox{{postIndex}}' class='interactionBox'>
+        <div class='interaction-main'>
             <button (click)=onAnswer(postIndex)>Répondre</button>
             <button *ngIf='nomUsager == post.nom' (click)=onEdit(postIndex)>Editer</button>
             <button *ngIf='nomUsager == post.nom' (click)=onSuppress(postIndex)>Supprimer</button>
@@ -15,26 +15,31 @@
             <button type='submit' (click)=onSubmit(postIndex) [disabled]="!reponseMainForm.form.valid">Valider</button>
         </form>
     </div>
-    <div>
-        <article *ngFor='let commentaire of commentaires[postIndex]; let commentaireIndex=index'>
+    <p>{{post.enfants}}</p>
+    <section *ngIf='post.enfants > 0'>
+        <div class='title-com'>
+            <h3>Les commentaires</h3>
+			<a href='#'>En voir plus</a>
+        </div>
+        <article class='article-com' *ngFor='let commentaire of commentaires[postIndex]; let commentaireIndex=index'>
             <p class='signature'>{{commentaire.date}}</p>
-            <p>{{commentaire.texte}}</p>
-            <div class='comInteractions'>
-                <button>Répondre</button>
-                <button>Editer</button>
-                <button>Supprimer</button>
+            <p class='texte-com'>{{commentaire.texte}}</p>
+            <div class='interaction-com' *ngIf='commentaire.enfants != 0'>
+                <button (click)='onLookCloser(postIndex, commentaireIndex)'>{{commentaire.enfants}} commentaires</button>
             </div>
         </article>
-    </div>
+    </section>
 </article>
 
-<div>
+<div id='nouveau-post'>
     <h2>Créer une nouvelle discussion :</h2>
     <div id='interactionBox{{posts.length}}'>
         <button (click)='onNewPost(posts.length)'>Nouvelle conversation :</button>
         <form id='newPostForm' #newPostForm="ngForm">
-            <label for="titre">Titre</label>
-            <input type="text" [(ngModel)]="userInputTitle" placeholder="Votre titre" required ngModel name="titre" id="titre">
+            <div>
+                <label for="titre">Titre : </label>
+                <input type="text" [(ngModel)]="userInputTitle" placeholder="Votre titre" required ngModel name="titre" id="titre">
+            </div>
             <textarea required [(ngModel)]="userInputText" name='texte'></textarea>
             <button type='submit' (click)=onSubmit(0) [disabled]="!newPostForm.form.valid">Valider</button>
         </form>

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MediaServeurService } from '../../service/media-serveur.service';
 import { ActivatedRoute, Router, ParamMap } from '@angular/router';
 import { AuthService } from '../../service/authentification.service';
+import { Location } from '@angular/common';
 
 import { Post } from '../../type/postType'
 
@@ -18,6 +19,7 @@ export class ForumComponent implements OnInit {
     private demandeServeur: MediaServeurService,
     private activatedroute:ActivatedRoute,
     private router: Router,
+    private location: Location
   ) {}
 
   ngOnInit(): void {
@@ -40,8 +42,10 @@ export class ForumComponent implements OnInit {
 
   getCommentaries(): void {
     for (let i = 0; i < this.posts.length; i ++) {
-      this.demandeServeur.getPostList(this.posts[i].id)
+      if (this.posts[i].enfants != 0) {
+        this.demandeServeur.getPostList(this.posts[i].id)
         .subscribe(posts => {this.commentaires[i] = posts });
+      }
     };
   }
 
@@ -105,4 +109,16 @@ export class ForumComponent implements OnInit {
     this.router.navigate([this.router.url]);
   }
 
+  //Methodes pour la gestion des commentaires :
+
+  onLookCloser(postIndex:number, commentaireIndex:number) {
+    this.posts[postIndex] = this.commentaires[postIndex][commentaireIndex] //On remplace le post parent par le commentaire enfant selectionné.
+    if (this.posts[postIndex].enfants == 0) {
+      this.commentaires[postIndex] = []; //On vide les commentaires du post s'il n'y en a pas
+    } else {
+      this.demandeServeur.getPostList(this.posts[postIndex].id)
+      .subscribe(posts => {this.commentaires[postIndex] = posts }); //Ou on les remplaces par ceux du commentaire désormais parents.
+    }
+    //Après cette opération, les autres posts restent inchangé.
+  }
 }

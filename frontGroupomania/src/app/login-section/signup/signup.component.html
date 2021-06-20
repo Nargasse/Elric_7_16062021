@@ -1,17 +1,21 @@
-<h1>Création de compte</h1>
-<button (click)="toLogin()">J'ai déjà un compte</button>
-<br /> <br />
-<form (ngSubmit)="onSignUp(loginForm.form.value)" #loginForm="ngForm">
-    <label for="mail">Adresse mail : </label>
-    <input type="text" id="mail" required name="mail" pattern="[\w.]*@\w*\.\w{2,3}$" ngModel placeholder="m.dupont@mailo.fr">
+<div>
+    <h1>Créer un compte :</h1>
+    <button (click)="toLogin()">J'ai déjà un compte</button>
     <br /> <br />
-    <label for="nom">Nom d'affichage : </label>
-    <input type="texte" id="nom" required name="nom" ngModel placeholder="Marcel Dupont">
-    <br /> <br />
-    <label for="password">Mot de passe : </label>
-    <input type="password" id="password" required name="password" minlength="7" ngModel placeholder="x6KJ sà2% poç3">
-    <br />
-    <button type="submit" [disabled]="!loginForm.form.valid">Enregistrement</button>
-    <br><br>
-    <p id='errorDisplay'></p>
-</form>
+    <form (ngSubmit)="onSignUp(loginForm.form.value)" #loginForm="ngForm">
+        <label for="mail">Adresse mail : </label>
+        <input type="text" id="mail" required name="mail" pattern="[\w.]*@\w*\.\w{2,3}$" ngModel
+            placeholder="m.dupont@mailo.fr">
+        <br /> <br />
+        <label for="nom">Nom d'affichage : </label>
+        <input type="texte" id="nom" required name="nom" ngModel placeholder="Marcel Dupont">
+        <br /> <br />
+        <label for="password">Mot de passe : </label>
+        <input type="password" id="password" required name="password" minlength="7" ngModel
+            placeholder="x6KJ sà2% poç3">
+        <br />
+        <button type="submit" [disabled]="!loginForm.form.valid">Enregistrement</button>
+        <br><br>
+        <p id='errorDisplay'></p>
+    </form>
+</div>

@@ -6,4 +6,5 @@ export interface Post {
     titre: string;
     texte: string;
     position: number;
+    enfants: number;
 }

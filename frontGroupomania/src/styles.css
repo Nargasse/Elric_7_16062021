@@ -10,6 +10,7 @@
 	--outliner-far-color: darkorchid;
 	--outliner-close-color: goldenrod;
 	--decorator-color: pink;
+	--title-main-color: #ffdaf3;
 	--title-secondary-color: #E9B533;
 	--title-tertiary-color: #F5F053;
 }
@@ -26,6 +27,7 @@ palette bleu-ciel :
 --outliner-far-color: paleturquoise;
 --outliner-close-color: darkturquoise;
 --decorator-color: blue;
+--title-main-color: blue;
 --title-tertiary-color: #287925;
 --title-secondary-color: #625300;
 */
@@ -41,6 +43,23 @@ palette beige
 --outliner-far-color: silver;
 --outliner-close-color: slategray;
 --decorator-color: rosybrown;
+--title-main-color: rosybrown;
 --title-tertiary-color: chocolate;
 --title-secondary-color: sienna;
 */
+
+a {
+	color: var(--text-main-color);
+	text-decoration: underline dashed var(--decorator-color);
+}
+
+a:hover, a:focus {
+	color: var(--text-secondary-color);
+	text-decoration: underline wavy var(--decorator-color);
+}
+
+body {
+	background-color:var(--bg-far-color);
+	color: var(--text-main-color);
+	margin: 0;
+}

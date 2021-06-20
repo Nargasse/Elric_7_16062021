@@ -1,16 +1,17 @@
 <header>
-  <div role="banner" class="band banner">
-      <img src="assets/img/logo-black.svg">
+  <div role="banner" id="banner">
+      <img id="logoImg" src="assets/images/logo-top-red.png" alt="">
       <p>Réseau social<br> d'entreprise</p>
   </div>
-  <div *ngIf='isAuth'>
+  <nav *ngIf='isAuth'>
     <a routerLink='/profil'>Profil</a>
     <a href='#' (click)=onlogOut>Decconexion</a>
     <a routerLink='/forum/0'>Accueil</a>
-  </div>
+  </nav>
 </header>
-
-<router-outlet></router-outlet>
+<main>
+  <router-outlet></router-outlet>
+</main>
 
 <footer>
   <p>Ceci est le footer.</p>

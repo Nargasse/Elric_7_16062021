@@ -29,22 +29,6 @@ export class AuthService {
     };
   }
 
-/*  createNewUser(signupForm) {
-    const newUserUrl = this.apiUrl + '/signup';
-    console.log(newUserUrl);
-    return new Promise ((resolve, reject) => {
-      this.http.post(newUserUrl, signupForm).subscribe(
-        (response: { message: string }) => {
-          resolve(response);
-        },
-        (error) => {
-          catchError(error);
-          reject(error);
-        }
-      )
-    });
-  }*/
-
   createNewUser(signupForm:object) {
     const newUserUrl = this.apiUrl + '/signup';
     return this.http.post(newUserUrl, signupForm)
