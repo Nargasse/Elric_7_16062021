@@ -63,7 +63,6 @@ export class MediaServeurService {
 
   saveEditedPost(texte: string, postId: number) {
     const editPostUrl = `${this.apiUrl}/edit/${postId}`
-    console.log(texte);
     return this.http.put(editPostUrl, {texte: texte}).pipe(
       catchError(this.handleError<any>('updatePost', ''))
     )

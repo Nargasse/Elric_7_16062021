@@ -13,7 +13,7 @@ import { ProfilComponent } from './main-section/profil/profil.component'
 const routes: Routes = [
   { path: '', redirectTo: '/forum/0', pathMatch: 'full'},
   { path: 'forum', redirectTo: 'forum/0', pathMatch: 'full' },
-  { path: 'forum/:masterPost', component: ForumComponent, canActivate: [AuthGuard]},
+  { path: 'forum/:position', component: ForumComponent, canActivate: [AuthGuard]},
 
   { path: 'profil', component: ProfilComponent, canActivate: [AuthGuard]},
   { path: 'signup', component: SignupComponent},
@@ -23,7 +23,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, {onSameUrlNavigation: 'reload'})],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

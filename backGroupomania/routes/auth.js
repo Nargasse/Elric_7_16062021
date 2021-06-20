@@ -3,7 +3,7 @@ const router = express.Router();
 
 const authControl = require('../controllers/auth');
 const tokenControl = require('../middleware/tokenVerification');
-const rateLimiter = require('../middleware/retry-limiter');
+const rateLimiter = require('../middleware/retryLimiter');
 
 router.post('/signup', rateLimiter, authControl.createUser);
 router.post('/login', rateLimiter, authControl.validateUser);

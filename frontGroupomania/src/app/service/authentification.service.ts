@@ -47,9 +47,7 @@ export class AuthService {
 
   createNewUser(signupForm:object) {
     const newUserUrl = this.apiUrl + '/signup';
-    return this.http.post(newUserUrl, signupForm).pipe(
-      catchError(this.handleError<string>('signupUser', ''))
-    )
+    return this.http.post(newUserUrl, signupForm)
   }
 
   loginUser(loginForm:object) {

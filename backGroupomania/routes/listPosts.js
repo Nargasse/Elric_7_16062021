@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const tokenControl = require('../middleware/tokenVerification');
+const rateLimiter = require('../middleware/retryLimiter');
 
 const postControl = require('../controllers/postControl');
 

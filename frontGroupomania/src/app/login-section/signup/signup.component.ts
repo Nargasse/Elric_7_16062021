@@ -19,22 +19,18 @@ export class SignupComponent implements OnInit {
   }
 
   onSignUp(loginForm:object) {
-    try {
       this.authService.createNewUser(loginForm).subscribe(
-        () => this.authService.loginUser(loginForm).subscribe()
-      )
-    } catch (error) {
-      (error:serverError) => {
-        const errorBox = document.getElementById("errorDisplay") as HTMLElement;
-        if (error.status == 403) {
-          errorBox.innerText = error.error.msg;
-        } else {
-          errorBox.innerText = "Une erreur inconnue c'est produite. Veuillez réessayez."
+        () => {
+          this.authService.loginUser(loginForm).subscribe()
+        }, (error:serverError) => {
+          const errorBox = document.getElementById("errorDisplay") as HTMLElement;
+          if (error.status == 403) {
+            errorBox.innerText = error.error.msg;
+          } else {
+            errorBox.innerText = "Une erreur inconnue c'est produite. Veuillez réessayez."
+          }
         }
-      }
-    }
-    
-      
+      )      
     }
 
   toLogin() {

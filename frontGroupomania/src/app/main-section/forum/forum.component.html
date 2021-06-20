@@ -1,49 +1,42 @@
-<a *ngIf="(postMaitre && postMaitre.hasOwnProperty('id'))" [routerLink]="['/forum', postMaitre.position]">Retour en arrière</a>
-
-<article *ngIf="(postMaitre && postMaitre.hasOwnProperty('id'))">
+<article *ngFor='let post of posts; let postIndex=index'>
     <div>
-        <h2>{{postMaitre.titre}}</h2>
-        <p>Ecrit par {{ postMaitre.nom }} le {{ postMaitre.date }}</p>
+        <h2>{{post.titre}}</h2>
+        <p>Ecrit par {{post.nom}} le {{post.date}}</p>
     </div>
-    <p>{{ postMaitre.texte }}</p>
+    <p>{{post.texte}}</p>
+    <div id='interactionBox{{postIndex}}'>
+        <div class='interaction'>
+            <button (click)=onAnswer(postIndex)>Répondre</button>
+            <button *ngIf='nomUsager == post.nom' (click)=onEdit(postIndex)>Editer</button>
+            <button *ngIf='nomUsager == post.nom' (click)=onSuppress(postIndex)>Supprimer</button>
+        </div>
+        <form class='userInput' #reponseMainForm="ngForm">
+            <textarea required name='texte' [(ngModel)]="userInputText"></textarea>
+            <button type='submit' (click)=onSubmit(postIndex) [disabled]="!reponseMainForm.form.valid">Valider</button>
+        </form>
+    </div>
     <div>
-        <button (click)="onAnswer('Master')">Répondre</button>
-        <button *ngIf='nomUsager == postMaitre.nom' (click)="onEdit('Master')">Editer</button>
-        <button *ngIf='nomUsager == postMaitre.nom' (click)="onSuppress('Master')">Supprimer</button>
+        <article *ngFor='let commentaire of commentaires[postIndex]; let commentaireIndex=index'>
+            <p class='signature'>{{commentaire.date}}</p>
+            <p>{{commentaire.texte}}</p>
+            <div class='comInteractions'>
+                <button>Répondre</button>
+                <button>Editer</button>
+                <button>Supprimer</button>
+            </div>
+        </article>
     </div>
-    <form id='textBoxMaster' #newTexteForm="ngForm" (ngSubmit)="onTextSubmit(newTexteForm.form.value.texte, 'Master')">
-        <textarea required ngModel name='texte'></textarea>
-        <p>texte = {{newTexteForm.value.texte}}</p>
-        <button type='submit' [disabled]="!newTexteForm.form.valid">Valider</button>
-    </form>
 </article>
 
-<article *ngFor="let post of posts; let postNumber=index">
-    <div>
-        <h3>{{post.titre}}</h3>
-        <p>Ecrit par {{ post.nom }} le {{ post.date }}</p>
+<div>
+    <h2>Créer une nouvelle discussion :</h2>
+    <div id='interactionBox{{posts.length}}'>
+        <button (click)='onNewPost(posts.length)'>Nouvelle conversation :</button>
+        <form id='newPostForm' #newPostForm="ngForm">
+            <label for="titre">Titre</label>
+            <input type="text" [(ngModel)]="userInputTitle" placeholder="Votre titre" required ngModel name="titre" id="titre">
+            <textarea required [(ngModel)]="userInputText" name='texte'></textarea>
+            <button type='submit' (click)=onSubmit(0) [disabled]="!newPostForm.form.valid">Valider</button>
+        </form>
     </div>
-    <p>{{ post.texte }}</p>
-    <div>
-        <button (click)="onAnswer(postNumber)">Répondre</button>
-        <button *ngIf='nomUsager == post.nom' (click)="onEdit(postNumber)">Editer</button>
-        <button *ngIf='nomUsager == post.nom' (click)="onSuppress(postNumber)">Supprimer</button>
-    </div>
-    <form id='textBox{{postNumber}}' #newTexteForm="ngForm" (ngSubmit)='onTextSubmit(newTexteForm.form.value.texte, postNumber)'>
-        <textarea required [(ngModel)]="userInput.texte" name='texte'></textarea>
-        <p>texte = '{{newTexteForm.form.value.texte}}</p>
-        <button type='submit' [disabled]="!newTexteForm.form.valid">Valider</button>
-    </form>
-
-    <a *ngIf="(commentaires[postNumber] && commentaires[postNumber].length != 0)" [routerLink]="['/forum', post.id]">Afficher les {{ commentaires[postNumber].length }} commentaires</a>
-</article>
-
-<div *ngIf="!postMaitre">
-<button (click)="onCreateNewTopic()">Créer nouvelle conversation</button>
-<form id='newPost' #newPostForm="ngForm" (ngSubmit)='onNewPost(newPostForm.form.value)'>
-    <label for="titre">Titre</label>
-    <input type="text" placeholder="Votre titre" required ngModel name="titre" id="titre">
-    <textarea required ngModel name='texte'></textarea>
-    <button type='submit' [disabled]="!newPostForm.form.valid">Valider</button>
-</form>
 </div>
