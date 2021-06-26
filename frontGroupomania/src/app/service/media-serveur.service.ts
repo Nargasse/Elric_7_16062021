@@ -45,7 +45,7 @@ export class MediaServeurService {
   }
 
   saveNewPost(texte: string, postId: number, titre: string = '') {
-    const timestamp = (new Date()).toLocaleString().replace(", ", " à ");
+    const timestamp = (new Date()).toLocaleString().replace(", ", " à ".replace(" AM", "")).replace(" PM", "");
     const postListUrl = `${this.apiUrl}/new`
     const nouveauPost = {
       userID: this.authService.getUserID(),

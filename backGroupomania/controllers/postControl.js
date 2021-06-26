@@ -9,7 +9,8 @@ const sqlDB = mysql.createConnection({
 });
 
 exports.getPostList = (request, response, next) => { //TODO : Tester qu'on a uniquement un nombre pour éviter les injections
-    sqlDB.query('SELECT id, nom, UserID, date, titre, texte, position, enfants FROM post WHERE position = ?', [request.params.position], function (err, result, fields) {
+    sqlDB.query('SELECT id, nom, UserID, date, titre, texte, position, enfants FROM post WHERE position = ? ORDER BY id DESC',
+    [request.params.position], function (err, result, fields) {
         if (err) return response.status(500).json(err);
         return response.status(200).json(result);
     });
@@ -23,7 +24,6 @@ exports.getOnePost = (request, response) => {
 }
 
 exports.saveNewPost = (request, response, next) => {
-
     let newPost = new Object();
     newPost.nom = request.body.nom;
     newPost.date = request.body.date;
@@ -32,6 +32,7 @@ exports.saveNewPost = (request, response, next) => {
     newPost.position = request.body.position;
     newPost.userID = request.body.userID;
     newPost.enfants = 0;
+    console.log(newPost)
 
     //On pourra ajouter des tests préalable à l'insertion pour chacun de ces paramètres, afin de limiter les risques d'insertions.
     sqlDB.query('INSERT INTO post SET ?', newPost, function (err, result) {

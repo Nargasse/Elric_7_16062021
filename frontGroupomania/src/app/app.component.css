@@ -38,5 +38,4 @@ header nav {
 
 footer {
 	border-top: outset 2px var(--outliner-far-color);
-	border-bottom: solid 2px var(--outliner-far-color);
 }

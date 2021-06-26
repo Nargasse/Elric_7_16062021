@@ -55,9 +55,9 @@ export class AuthService {
         this.userNom = response.nom;
         this.authToken = response.token;
         if (!document.cookie) {
-          document.cookie = "token=" + response.token + '; expire=' + 3600 + '; SameSite=Lax' +'; httpOnly';
-          document.cookie = "nom=" + response.nom + '; expire=' + 3600 + '; SameSite=Lax' +'; httpOnly';
-          document.cookie = 'id=' + response.userID + '; expire=' + 3600 + '; SameSite=Lax' +'; httpOnly';
+          document.cookie = "token=" + response.token + '; Expires=' + 3600 + '; SameSite=Lax';
+          document.cookie = "nom=" + response.nom + '; Expires=' + 3600 + '; SameSite=Lax';
+          document.cookie = 'id=' + response.userID + '; Expires=' + 3600 + '; SameSite=Lax';
         }
         this.isAuth.next(true);
         this.router.navigate(['/forum']);
@@ -70,9 +70,10 @@ export class AuthService {
     this.authToken = '';
     this.userNom = '';
     this.userID = -1;
-    document.cookie = "token=''"+ '; expire=' + -1;
-    document.cookie = "nom=''" + this.getNom() + '; expire=' + -1;
-    document.cookie = 'id=-1' + this.getUserID() + '; expire=' + -1;
+    document.cookie = "token=''"+ '; Max-Age=' + 0;
+    document.cookie = "nom=''" + '; Max-Age=' + 0;
+    document.cookie = 'id=-1' + '; Max-Age=' + 0;
+    this.isAuth.next(false);
     this.router.navigate(['login']);
   }
 
@@ -91,11 +92,28 @@ export class AuthService {
       cookies.some((item) => item.trim().startsWith('nom')) &&
       cookies.some((item) => item.trim().startsWith('id'))
     ) {
-      this.authToken = String(cookies.find(row => row.startsWith('token='))).split('=')[1];
-      this.userNom = String(cookies.find(row => row.startsWith('nom='))).split('=')[1];
-      this.userID = Number(String(cookies.find(row => row.startsWith('id='))).split('=')[1]);
+      this.authToken = this.getCookieValue('token');
+      this.userNom = this.getCookieValue('nom');
+      this.userID = Number(this.getCookieValue('id'));
+      this.isAuth.next(true);
       return true
     } else return false
+  }
+
+  getCookieValue(cname:string) {
+    let name = cname + "=";
+    let decodedCookie = decodeURIComponent(document.cookie);
+    let ca = decodedCookie.split(';');
+    for(let i = 0; i <ca.length; i++) {
+      let c = ca[i];
+      while (c.charAt(0) == ' ') {
+        c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+      }
+    }
+    return "";
   }
 
 }

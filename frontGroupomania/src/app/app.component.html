@@ -5,7 +5,7 @@
   </div>
   <nav *ngIf='isAuth'>
     <a routerLink='/profil'>Profil</a>
-    <a href='#' (click)=onlogOut>Decconexion</a>
+    <a routerLink='' (click)=onlogOut()>Decconexion</a>
     <a routerLink='/forum/0'>Accueil</a>
   </nav>
 </header>

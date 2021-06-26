@@ -1,36 +1,3 @@
-<article class='article-main' *ngFor='let post of posts; let postIndex=index'>
-    <div class='title-main'>
-        <h2>{{post.titre}}</h2>
-        <p>Ecrit par {{post.nom}} le {{post.date}}</p>
-    </div>
-    <p class='texte-main'>{{post.texte}}</p>
-    <div id='interactionBox{{postIndex}}' class='interactionBox'>
-        <div class='interaction-main'>
-            <button (click)=onAnswer(postIndex)>Répondre</button>
-            <button *ngIf='nomUsager == post.nom' (click)=onEdit(postIndex)>Editer</button>
-            <button *ngIf='nomUsager == post.nom' (click)=onSuppress(postIndex)>Supprimer</button>
-        </div>
-        <form class='userInput' #reponseMainForm="ngForm">
-            <textarea required name='texte' [(ngModel)]="userInputText"></textarea>
-            <button type='submit' (click)=onSubmit(postIndex) [disabled]="!reponseMainForm.form.valid">Valider</button>
-        </form>
-    </div>
-    <p>{{post.enfants}}</p>
-    <section *ngIf='post.enfants > 0'>
-        <div class='title-com'>
-            <h3>Les commentaires</h3>
-			<a href='#'>En voir plus</a>
-        </div>
-        <article class='article-com' *ngFor='let commentaire of commentaires[postIndex]; let commentaireIndex=index'>
-            <p class='signature'>{{commentaire.date}}</p>
-            <p class='texte-com'>{{commentaire.texte}}</p>
-            <div class='interaction-com' *ngIf='commentaire.enfants != 0'>
-                <button (click)='onLookCloser(postIndex, commentaireIndex)'>{{commentaire.enfants}} commentaires</button>
-            </div>
-        </article>
-    </section>
-</article>
-
 <div id='nouveau-post'>
     <h2>Créer une nouvelle discussion :</h2>
     <div id='interactionBox{{posts.length}}'>
@@ -45,3 +12,44 @@
         </form>
     </div>
 </div>
+
+<article class='article-main' *ngFor='let post of postsActifs; let postIndex=index'>
+    <div class='title-main'>
+        <h2>{{post.titre}}</h2>
+        <p>Ecrit par {{post.nom}} le {{post.date}}</p>
+    </div>
+    <a *ngIf='post.position != 0' (click)=onRetour(postIndex) class='bouton-retour'>Retour</a>
+    <p class='texte-main'>{{post.texte}}</p>
+    <div id='interactionBox{{postIndex}}' class='interactionBox'>
+        <div class='interaction-main'>
+            <button (click)=onAnswer(postIndex)>Répondre</button>
+            <button *ngIf='nomUsager == post.nom' (click)=onEdit(postIndex)>Editer</button>
+            <button *ngIf='nomUsager == post.nom' (click)=onSuppress(postIndex)>Supprimer</button>
+        </div>
+        <form class='userInput' #reponseMainForm="ngForm">
+            <textarea required name='texte' [(ngModel)]="userInputText"></textarea>
+            <button type='submit' (click)=onSubmit(postIndex) [disabled]="!reponseMainForm.form.valid">Valider</button>
+        </form>
+    </div>
+    <section *ngIf='post.enfants > 0'>
+        <div class='title-com'>
+            <h3>Les commentaires</h3>
+			<a href='#'>En voir plus</a>
+        </div>
+        <article class='article-com' *ngFor='let commentaire of commentairesActifs[postIndex]; let commentaireIndex=index'>
+            <h4>{{commentaire.nom}}</h4>
+            <p class='signature'>{{commentaire.date}}</p>
+            <p class='texte-com'>{{commentaire.texte}}</p>
+            <div class='commentaire-sub-section'>
+                <div *ngIf='commentaire.enfants > 0'>
+                    <p class='commentaireInfoBox'>{{commentaire.enfants}} commentaires !</p>
+                </div>
+                <div class='interaction-com'>
+                    <button (click)='onLookCloser(postIndex, commentaireIndex)'>Voir de plus prêt</button>
+                </div>
+            </div>
+        </article>
+    </section>
+</article>
+
+<a (click)=showMoreComments() *ngIf='postsActifs.length < posts.length'>Charger plus de post</a>

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MediaServeurService } from '../../service/media-serveur.service';
 import { ActivatedRoute, Router, ParamMap } from '@angular/router';
 import { AuthService } from '../../service/authentification.service';
-import { Location } from '@angular/common';
+//import { Location } from '@angular/common';
 
 import { Post } from '../../type/postType'
 
@@ -19,7 +19,7 @@ export class ForumComponent implements OnInit {
     private demandeServeur: MediaServeurService,
     private activatedroute:ActivatedRoute,
     private router: Router,
-    private location: Location
+    //private location: Location
   ) {}
 
   ngOnInit(): void {
@@ -32,11 +32,16 @@ export class ForumComponent implements OnInit {
   commentaires: [Post[]] = [[]]; //Pour chaque post, on télécharge ses commentaires, s'il y en a, ce qui permettra d'en afficher quelques-uns.
   nomUsager: string = this.authService.getNom(); //Chaque nom usager étant unique dans la BDD, c'est une méthode efficace pour vérifier qui est l'auteur.
 
+  postsActifs: Post[] = []; //Tableau qui ne contiendra que les posts chargés sur la page.
+  commentairesActifs: [Post[]] = [[]];
+  nombrePostsVisible: number = 10; // Nombre de posts à charger sur la page, qui sera mis à jour avec un bouton de bas de page.
+
   getPostList(position:number): void {
     this.demandeServeur.getPostList(position)
       .subscribe(posts => {
         this.posts = posts;
         this.getCommentaries();
+        this.updateVisiblePosts()
         });
   }
 
@@ -44,10 +49,51 @@ export class ForumComponent implements OnInit {
     for (let i = 0; i < this.posts.length; i ++) {
       if (this.posts[i].enfants != 0) {
         this.demandeServeur.getPostList(this.posts[i].id)
-        .subscribe(posts => {this.commentaires[i] = posts });
+        .subscribe(posts => {
+          this.commentaires[i] = posts;
+          });
       }
     };
   }
+
+  updateVisiblePosts(): void {
+    let arrayDiffPointer: number = 0;
+    do {
+      arrayDiffPointer = this.postsActifs.length; //Mécaniquement, la longueur de l'array correspond toujours à la position du premier emplacement vide.
+      this.postsActifs.push(this.posts[arrayDiffPointer]); //On peut donc l'employer pour prendre le post correspondant sur le array parent.
+      this.commentairesActifs.push([]); //On prépare un nouvel array pour garder un miroir entre les deux variables.
+      if (this.posts[arrayDiffPointer].enfants != 0) { //On vérifie alors si l'array contient des commentaires
+        let index = arrayDiffPointer; //On sauvegarde la variable dans chaque itération de la boucle, pour avoir la bonne valeur quand la promesse revient.
+        this.demandeServeur.getPostList(this.posts[arrayDiffPointer].id)
+        .subscribe(posts => {
+          this.commentaires[index] = posts;
+          this.updateVisibleCommentaires(index) }); //Et si c'est le cas, on les charges à la position miroir.
+      }
+    } while (this.postsActifs.length < this.nombrePostsVisible && this.postsActifs.length < this.posts.length) //La boucle s'arrête quand on a le nombre de posts voulus.
+  }
+
+  updateVisibleCommentaires(postIndex:number): void {
+    let arrayPointer = (typeof this.commentairesActifs[postIndex] !== undefined) ? 0 : this.commentairesActifs[postIndex].length;
+    //let arrayPointer = this.commentairesActifs[postIndex].length; //Renvoie le nombres de commentaires déjà attribués en posts actifs
+    let i = 0
+    do {
+      this.commentairesActifs[postIndex].push(this.commentaires[postIndex][arrayPointer])
+      arrayPointer++;
+      i++;
+    } while (i < 3 && arrayPointer < this.commentaires[postIndex].length) 
+  }
+
+  showMoreComments():void {
+    this.nombrePostsVisible += 5;
+    this.updateVisiblePosts();
+  }
+
+    /* Je penses intéréssant de noter que je fais ici le choix de charger tous les posts et commentaires dans la mémoire.
+     * Je me contente de ne pas les chargés sur la page pour économiser le temps que la page met à être peinte puis permettre de les ajoutés rapidement par la suite.
+     * Si le nombre de choses à chargés devenait important, il faudrait peut-être réduire l'usage de la mémoire en coupant avec SQL.
+     * Néanmoins, coupé avec SQL augmente la charge SQL avec des requêtes plus complexe et plus nombreuses.
+     * Dans le cas d'un forum au nombre d'usagers limité comme celui-ci, ce pourrait être le meilleur choix à long terme, mais c'est à débattre.
+     */
 
   //Methodes pour la barre d'interaction
 
@@ -112,13 +158,19 @@ export class ForumComponent implements OnInit {
   //Methodes pour la gestion des commentaires :
 
   onLookCloser(postIndex:number, commentaireIndex:number) {
-    this.posts[postIndex] = this.commentaires[postIndex][commentaireIndex] //On remplace le post parent par le commentaire enfant selectionné.
-    if (this.posts[postIndex].enfants == 0) {
-      this.commentaires[postIndex] = []; //On vide les commentaires du post s'il n'y en a pas
+    this.postsActifs[postIndex] = this.commentairesActifs[postIndex][commentaireIndex] //On remplace le post parent par le commentaire enfant selectionné.
+    this.postsActifs[postIndex].titre = 'Reponse à : ' + this.posts[postIndex].titre;
+    if (this.postsActifs[postIndex].enfants == 0) {
+      this.commentairesActifs[postIndex] = []; //On vide les commentaires du post s'il n'y en a pas
     } else {
-      this.demandeServeur.getPostList(this.posts[postIndex].id)
-      .subscribe(posts => {this.commentaires[postIndex] = posts }); //Ou on les remplaces par ceux du commentaire désormais parents.
+      this.demandeServeur.getPostList(this.postsActifs[postIndex].id)
+      .subscribe(posts => {this.commentairesActifs[postIndex] = posts }); //Ou on les remplaces par ceux du commentaire désormais parents.
     }
     //Après cette opération, les autres posts restent inchangé.
+  }
+
+  onRetour(postIndex:number) {
+    this.postsActifs[postIndex] = this.posts[postIndex];
+    this.commentairesActifs[postIndex] = this.commentaires[postIndex];
   }
 }
