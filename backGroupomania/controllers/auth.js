@@ -24,7 +24,7 @@ exports.createUser = (request, response, next) => {
         } else {
             bcrypt.hash(request.body.password, 10)
             .then(hash => {
-            sqlDB.query('INSERT INTO utilisateurs (nom, mail, password) VALUES (?, ?, ?)', [request.body.nom, request.body.mail, hash] , function (err) {
+            sqlDB.query('INSERT INTO utilisateurs (nom, mail, password, isadmin) VALUES (?, ?, ?, ?)', [request.body.nom, request.body.mail, hash, false] , function (err) {
                 if (err) return response.status(500).json ({ err });
                 return response.status(201).json({ message: 'utilisateur enregistré' });
                 })
@@ -37,7 +37,7 @@ exports.createUser = (request, response, next) => {
 }
 
 exports.validateUser = (request, response, next) => {
-        sqlDB.query('SELECT ID, nom, password FROM utilisateurs WHERE mail = ?', [request.body.mail], function (err, result) {
+        sqlDB.query('SELECT ID, nom, password, isadmin FROM utilisateurs WHERE mail = ?', [request.body.mail], function (err, result) {
         if (err) return response.status(500).json({ msg: 'Erreur de communication avec la BDD' });
         if (typeof result[0] === 'undefined') return response.status(401).json({err});
             bcrypt.compare(request.body.password, result[0].password)
@@ -46,6 +46,7 @@ exports.validateUser = (request, response, next) => {
                     return response.status(200).json({
                         userID: result[0].ID,
                         nom: result[0].nom,
+                        isadmin: result[0].isadmin,
                         token: webToken.sign(
                             { userID: result[0].ID },
                             'LA_SPECTRE_DES_SECONDES_BERCE_MON_HUMEUR_COMPLICE',

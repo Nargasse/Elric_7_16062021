@@ -17,7 +17,6 @@ export class AppComponent {
       this.authService.isAuth.subscribe( isAuth => this.isAuth = isAuth);
     }
   onlogOut() {
-    console.log('salut')
     this.authService.logOut();
   }
 }

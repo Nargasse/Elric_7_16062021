@@ -3,4 +3,5 @@ export interface User {
     nom: string;
     mail: string;
     token: string;
+    isadmin: number;
 }

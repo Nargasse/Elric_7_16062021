@@ -31,6 +31,7 @@ export class ForumComponent implements OnInit {
   posts: Post[] = []; //La liste des posts principaux.
   commentaires: [Post[]] = [[]]; //Pour chaque post, on télécharge ses commentaires, s'il y en a, ce qui permettra d'en afficher quelques-uns.
   nomUsager: string = this.authService.getNom(); //Chaque nom usager étant unique dans la BDD, c'est une méthode efficace pour vérifier qui est l'auteur.
+  isAdmin: boolean = false;
 
   postsActifs: Post[] = []; //Tableau qui ne contiendra que les posts chargés sur la page.
   commentairesActifs: [Post[]] = [[]];
@@ -43,6 +44,7 @@ export class ForumComponent implements OnInit {
         this.getCommentaries();
         this.updateVisiblePosts()
         });
+      this.authService.isAdmin.subscribe( isAdmin => this.isAdmin = isAdmin);
   }
 
   getCommentaries(): void {

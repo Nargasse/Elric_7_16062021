@@ -24,7 +24,7 @@
         <div class='interaction-main'>
             <button (click)=onAnswer(postIndex)>Répondre</button>
             <button *ngIf='nomUsager == post.nom' (click)=onEdit(postIndex)>Editer</button>
-            <button *ngIf='nomUsager == post.nom' (click)=onSuppress(postIndex)>Supprimer</button>
+            <button *ngIf='nomUsager == post.nom || isAdmin == true' (click)=onSuppress(postIndex)>Supprimer</button>
         </div>
         <form class='userInput' #reponseMainForm="ngForm">
             <textarea required name='texte' [(ngModel)]="userInputText"></textarea>

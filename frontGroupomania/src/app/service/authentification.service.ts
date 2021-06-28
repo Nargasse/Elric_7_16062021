@@ -11,6 +11,7 @@ import { User } from '../type/userType';
 export class AuthService {
 
   isAuth = new BehaviorSubject<boolean>(false);
+  isAdmin = new BehaviorSubject<boolean>(false);
   private authToken: string = '';
   private userID: number = -1;
   private userNom: string = '';
@@ -60,6 +61,7 @@ export class AuthService {
           document.cookie = 'id=' + response.userID + '; Expires=' + 3600 + '; SameSite=Lax';
         }
         this.isAuth.next(true);
+        if (response.isadmin == 1)this.isAdmin.next(true);
         this.router.navigate(['/forum']);
       }),
       catchError(this.handleError<User>('loginUser', )),
